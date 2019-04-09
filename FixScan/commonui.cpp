@@ -5,25 +5,22 @@ NewProject::NewProject(QDialog *parent /*= nullptr*/):QDialog(parent)
 {
 	m_button_path = new QPushButton("Path", this);
 	m_globalMarkerFile =new QLabel("Global marker file",this);
-	m_textureEnabled =new QLabel("Texture enabled",this);
 	m_pointDist = new QLabel("Point distance", this);
 	m_alignType = new QLabel("Align type", this);
-	m_rapidMode = new QLabel("Rapid mode", this);
-	m_fastSave = new QLabel("Fast save", this);
 
 	m_pathR=new QLineEdit("", this);
 	m_globalMarkerFileR = new QLineEdit("", this);
-	m_textureEnabledR = new QComboBox(this);
+	m_textureEnabledR = new QCheckBox(this);
 	m_pointDistR = new QLineEdit("", this);
 	m_alignTypeR = new QComboBox(this);
-	m_rapidModeR = new QComboBox(this);
-	m_fastSaveR = new QComboBox(this);
-	m_textureEnabledR->addItem("true");
-	m_textureEnabledR->addItem("false");
-	m_rapidModeR->addItem("true");
-	m_rapidModeR->addItem("false");
-	m_fastSaveR->addItem("true");
-	m_fastSaveR->addItem("false");
+	m_rapidModeR = new QCheckBox(this);
+	m_fastSaveR = new QCheckBox(this);
+	m_textureEnabledR->setCheckable(true);
+	m_textureEnabledR->setText("Texture enabled          ");
+	m_rapidModeR->setCheckable(true);
+	m_rapidModeR->setText("Rapid mode           ");
+	m_fastSaveR->setCheckable(true);
+	m_fastSaveR->setText("Fast save");
 
 	m_alignTypeR->addItem("AT_FEATURES");
 	m_alignTypeR->addItem("AT_MARKERS");
@@ -43,16 +40,14 @@ NewProject::NewProject(QDialog *parent /*= nullptr*/):QDialog(parent)
 	hlay1->addWidget(m_globalMarkerFile);
 	hlay1->addWidget(m_globalMarkerFileR);
 
-	hlay2->addWidget(m_textureEnabled);
 	hlay2->addWidget(m_textureEnabledR);
 	hlay2->addWidget(m_pointDist);
 	hlay2->addWidget(m_pointDistR);
 
+	hlay3->addWidget(m_rapidModeR);
 	hlay3->addWidget(m_alignType);
 	hlay3->addWidget(m_alignTypeR);
-	hlay3->addWidget(m_rapidMode);
-	hlay3->addWidget(m_rapidModeR);
-	hlay4->addWidget(m_fastSave);
+	
 	hlay4->addWidget(m_fastSaveR);
 
 	m_button_OK = new QPushButton("OK", this);
@@ -78,35 +73,25 @@ NewProject::~NewProject()
 
 }
 
-bool NewProject::typeBool(QString type)
-{
-	if (type == "true")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+
 
 void NewProject::onPushButtonClicked( )
 {
 	QString strPath = m_pathR->text();
 	QString strGlovalMarkerFile = m_globalMarkerFileR->text();
-	QString strtextureEnabled = m_textureEnabledR->currentText();
+	bool strtextureEnabled = m_textureEnabledR->isChecked();
 	QString strpointDist = m_pointDistR->text();
 	QString stralignType = m_alignTypeR->currentText();
-	QString strrapidMode = m_rapidModeR->currentText();
-	QString strfastSave = m_fastSaveR->currentText();
+	bool strrapidMode = m_rapidModeR->isChecked();
+	bool strfastSave = m_fastSaveR->isChecked();
 	QJsonObject jsonobject;
 	jsonobject.insert("path", strPath);
 	jsonobject.insert("globalMarkerFile", strGlovalMarkerFile);
-	jsonobject.insert("textureEnabled",typeBool(strtextureEnabled) );
+	jsonobject.insert("textureEnabled", strtextureEnabled);
 	jsonobject.insert("pointDist", strpointDist.toDouble());
 	jsonobject.insert("alignType", stralignType);
-	jsonobject.insert("rapidMode", typeBool(strrapidMode));
-	jsonobject.insert("fastSave", typeBool(strfastSave));
+	jsonobject.insert("rapidMode", strrapidMode);
+	jsonobject.insert("fastSave", strfastSave);
 	QJsonDocument document;
 	document.setObject(jsonobject);
 	QByteArray result = document.toJson();
@@ -116,7 +101,7 @@ void NewProject::onPushButtonClicked( )
 
 void NewProject::onPathButtonClicked()
 {
-	QString path = QFileDialog::getExistingDirectory(this, QStringLiteral("select a file path"));
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("select a file"));
 	m_pathR->setText(path);
 }
 

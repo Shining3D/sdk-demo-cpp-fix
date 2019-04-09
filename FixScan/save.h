@@ -23,7 +23,7 @@ private slots:
 	void on_pushButton_Path_clicked();
 private:
     Ui::save *ui;
-	bool typeBool(QString type);//Get boolean values corresponding to characters.
+	
 };
 
 #endif // SAVE_H
