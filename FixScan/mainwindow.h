@@ -108,6 +108,7 @@ private slots:
 	*/
 	void onVideoImageReady(int camID, QPixmap pixmap);
 private:
+	void execTerminate();
 public:
 	/*
 	socket:ZMQ socket
@@ -146,7 +147,7 @@ public slots://Response signal to  call SDK interface
 	void onSave(QByteArray);
 protected:
 	void closeEvent(QCloseEvent *event);//When the main thread  exit,it exits the sub-thread
-	bool typeBool(QString type);//Get boolean values corresponding to characters.
+
 	
 };
 
