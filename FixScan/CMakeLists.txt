@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 cmake_policy(VERSION 3.4)
-project(sdk-demo-cpp-fix VERSION 0.1.0)
+project(FixScan-Demo VERSION 0.1.0)
  
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -12,7 +12,7 @@ set (CMAKE_PREFIX_PATH $ENV{QTDIR595_64})
 
 find_package(Qt5 COMPONENTS Core Gui Widgets LinguistTools REQUIRED)
 
-set(TARGET_NAME sdk-demo-cpp-fix)
+set(TARGET_NAME FixScan-Demo)
 
 set(UIS
 	mainwindow.ui
@@ -20,6 +20,7 @@ set(UIS
 	mesh.ui
 	save.ui
 	startscan.ui
+	simplify.ui
 )
 
 set(HEADERS 
@@ -31,6 +32,7 @@ set(HEADERS
 	mesh.h
 	save.h
 	startscan.h
+	simplify.h
 )
 
 set(SOURCES 
@@ -43,6 +45,7 @@ set(SOURCES
 	mesh.cpp
 	save.cpp
 	startscan.cpp
+	simplify.cpp
 )
 
 include_directories(${ZeroMQ_INCLUDE_DIR})
