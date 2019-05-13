@@ -17,6 +17,7 @@
 #include "mesh.h"
 #include "save.h"
 #include "startscan.h"
+#include "simplify.h"
 namespace Ui {
 class MainWindow;
 }
@@ -61,6 +62,7 @@ private slots:
 	void ScanFramerate();
 	void ScanPointCount();
 	void ScanMarkerCount();
+	void ScanMeshPointCount();
 	void on_pushButton_Refresh_clicked();
 
 
@@ -86,7 +88,7 @@ private slots:
 	void on_pushButton_ScanNewProject_clicked();
 	void on_pushButton_scanMesh_clicked();
 	void on_pushButton_scanSave_clicked();
-
+	void on_pushButton_scanSimplify_clicked();
 	//Send a  request with a string data
 	void on_pushButton_ScaneEnterScan_clicked();
 	void on_pushButton_ScanOpenProject_clicked();
@@ -136,7 +138,8 @@ private:
 	mesh *m_mesh;
 	save *m_save;
 	startScan *m_startScan;
-	
+	Simplify *m_simplify;
+	bool m_bSimplify;
 
 public slots://Response signal to  call SDK interface  
 	void onNewProject(QByteArray);
@@ -145,6 +148,7 @@ public slots://Response signal to  call SDK interface
 	void onCancelScan(QByteArray);
 	void onMesh(QByteArray);
 	void onSave(QByteArray);
+	void onSimplify(QByteArray);
 protected:
 	void closeEvent(QCloseEvent *event);//When the main thread  exit,it exits the sub-thread
 

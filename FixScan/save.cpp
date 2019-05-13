@@ -47,7 +47,7 @@ void save::on_pushButton_clicked()
 
 void save::on_pushButton_Path_clicked()
 {
-	QString path = QFileDialog::getOpenFileName(this, "select a file");
+	QString path = QFileDialog::getExistingDirectory(this, "select a file");
 	ui->lineEdit_path->setText(path);
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>932</width>
-    <height>635</height>
+    <width>930</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -454,7 +454,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Free">
        <attribute name="title">
@@ -643,6 +643,19 @@
        <string>New project</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_scanSimplify">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>98</y>
+        <width>61</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Simplify</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -677,24 +690,13 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>-1</x>
-      <y>-1</y>
-      <width>911</width>
-      <height>581</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout"/>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>932</width>
+     <width>930</width>
      <height>23</height>
     </rect>
    </property>

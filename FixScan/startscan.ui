@@ -90,32 +90,12 @@
        <widget class="QComboBox" name="comboBox_alignType">
         <item>
          <property name="text">
-          <string>AT_FEATURES</string>
+          <string>AT_TURTABLE_FEATURE</string>
          </property>
         </item>
         <item>
          <property name="text">
           <string>AT_MARKERS</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>AT_HYBRID</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>AT_AUTO</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>AT_TURTABLE</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>AT_CODE_POINT</string>
          </property>
         </item>
         <item>

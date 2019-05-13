@@ -79,13 +79,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_mesh=new mesh;
 	m_save=new save;
 	m_startScan=new startScan;
+	m_simplify = new Simplify;
+	m_bSimplify = false;
 
+	connect(m_simplify, &Simplify::simplifySignal, this, &MainWindow::onSimplify);
 	connect(m_startScan, &startScan::startScanSignal, this, &MainWindow::onStartScan);
 
 	connect(m_mesh, &mesh::meshSignal, this, &MainWindow::onMesh);
 	connect(m_save, &save::saveSignal, this, &MainWindow::onSave);
 	ui->widget->setEnabled(false);
-	ui->widget->setContentsMargins(0,0,0,0);
+	ui->lineEdit_OpenProject->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -169,7 +172,8 @@ void MainWindow::on_pushButton_UnregisterProcesser_clicked()
 
 void MainWindow::ScanTriangleCount()
 {
-	const char *sendData = "v1.0/scan/triangleCount";
+	//const char *sendData = "v1.0/scan/triangleCount";
+	const char *sendData = "v1.0/scan/pointFaceCount";
 	int nbytes = zmq_send(m_zmqReqSocket, sendData, strlen(sendData), 0);
 	char buf[MAX_DATA_LENGTH + 1] = { 0 };
 	nbytes = zmq_recv(m_zmqReqSocket, buf, MAX_DATA_LENGTH, 0);
@@ -222,6 +226,19 @@ void MainWindow::ScanMarkerCount()
 	assert(!hasMore(m_zmqReqSocket));
 }
 
+void MainWindow::ScanMeshPointCount()
+{
+	const char *sendData = "v1.0/scan/meshPointCount";
+	int nbytes = zmq_send(m_zmqReqSocket, sendData, strlen(sendData), 0);
+	char buf[MAX_DATA_LENGTH + 1] = { 0 };
+	nbytes = zmq_recv(m_zmqReqSocket, buf, MAX_DATA_LENGTH, 0);
+	int num;
+	memcpy(&num, buf, sizeof(int));
+	qDebug() << "scan meshPointCount:" << num;
+	ui->label_pointCountR->setText(QString::number(num));
+	assert(!hasMore(m_zmqReqSocket));
+}
+
 void MainWindow::on_pushButton_Refresh_clicked()
 {
 	 ScanStatus();
@@ -229,10 +246,17 @@ void MainWindow::on_pushButton_Refresh_clicked()
 	 ScanTrackLost();
 	 ScanNoMarkerDetected();
 	 ScanDist();
-	 ScanTriangleCount();
 	 ScanFramerate();
-	 ScanPointCount();
+	 ScanTriangleCount();
+	 //ScanPointCount();
 	 ScanMarkerCount();
+
+	 if (m_bSimplify == true){
+		 ScanMeshPointCount();
+	 }
+	 else{
+		 ScanPointCount();
+	 }
 }
 
 
@@ -323,6 +347,12 @@ void MainWindow::on_pushButton_scanMesh_clicked()
 void MainWindow::on_pushButton_scanSave_clicked()
 {
 	m_save->show();
+}
+
+void MainWindow::on_pushButton_scanSimplify_clicked()
+{
+	m_bSimplify = true;
+	m_simplify->show();
 }
 
 void MainWindow::on_pushButton_ScaneEnterScan_clicked()
@@ -495,6 +525,26 @@ void MainWindow::onSave(QByteArray sendMore)
 	assert(!hasMore(m_zmqReqSocket));
 }
 
+void MainWindow::onSimplify(QByteArray sendMore)
+{
+	const char *sendData = "v1.0/scan/lastSimplifyParams/set";
+	int nbytes = zmq_send(m_zmqReqSocket, sendData, strlen(sendData), ZMQ_SNDMORE);
+	if (nbytes != strlen(sendData)) {
+		qWarning() << "cannot send scan onSimplify";
+		return;
+	}
+
+	nbytes = zmq_send(m_zmqReqSocket, sendMore.constData(), strlen(sendMore.constData()), 0);
+	if (nbytes != sendMore.size()) {
+		qWarning() << "cannot send scan onSimplify";
+		return;
+	}
+	int result = 0;
+	nbytes = zmq_recv(m_zmqReqSocket, &result, sizeof(int), 0);
+	qDebug() << "scan onSimplify recv reply data:" << (result == 0 ? false : true);
+	assert(!hasMore(m_zmqReqSocket));
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	
@@ -657,6 +707,17 @@ void MainWindow::onPublishReceived(QString majorCmd, QString minorCmd, QByteArra
 		memcpy(&value, data.constData(), data.size());
 		m_progressDialog->onProgress(value);
 	}
+	else if (majorCmd == QStringLiteral("device")){
+		if (minorCmd == QStringLiteral("firmwareUpgradable")){
+			//检测到可以进行固件升级
+			QMessageBox msgBox;
+			msgBox.setText(QStringLiteral("Update firmware!!!"));
+			msgBox.setInformativeText(QStringLiteral("Do you want to update this firmware ?"));
+			msgBox.setStandardButtons(QMessageBox::Discard | QMessageBox::Ok);
+			msgBox.setDefaultButton(QMessageBox::Ok);
+			int ret = msgBox.exec();
+		}
+	}
 	else if (majorCmd == QStringLiteral("scan")) {
 			if (minorCmd == QStringLiteral("framerate")) {
 				int num = 0;
@@ -674,12 +735,16 @@ void MainWindow::onPublishReceived(QString majorCmd, QString minorCmd, QByteArra
 				memcpy(&num, data.constData(), data.size());
 				ui->label_markerCountR->setText(QString::number(num));
 			}
-			if (minorCmd == QStringLiteral("triangleCount")) {
+// 			if (minorCmd == QStringLiteral("triangleCount")) {
+// 				int num = 0;
+// 				memcpy(&num, data.constData(), data.size());
+// 				ui->label_triangleCountR->setText(QString::number(num));
+// 			}
+			if (minorCmd == QStringLiteral("pointFaceCount")) {
 				int num = 0;
 				memcpy(&num, data.constData(), data.size());
 				ui->label_triangleCountR->setText(QString::number(num));
 			}
-
 
 
 			
