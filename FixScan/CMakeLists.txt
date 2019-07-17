@@ -33,6 +33,7 @@ set(HEADERS
 	save.h
 	startscan.h
 	simplify.h
+	reporterror.h
 )
 
 set(SOURCES 
@@ -46,6 +47,7 @@ set(SOURCES
 	save.cpp
 	startscan.cpp
 	simplify.cpp
+	reporterror.cpp
 )
 
 include_directories(${ZeroMQ_INCLUDE_DIR})

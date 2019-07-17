@@ -15,6 +15,7 @@ class startScan : public QDialog
     Q_OBJECT
 
 public:
+	void setEnable_turnableTimes(bool);
 	void setAction(QString action);//Set the specified key("action") value in json
 	/*
 	index:    the combobox index

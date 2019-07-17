@@ -12,6 +12,12 @@ DataProcesser::DataProcesser(MainWindow *mainWindow, void *context, QObject *par
 
 void DataProcesser::setup(int port)//12000
 {
+	//note: you should call "zmq_close" again when you want to rebuild zmq connection. 
+	if (m_socket != nullptr){
+		zmq_close(m_socket);
+	}
+	//.end
+
 	m_socket = zmq_socket(m_context, ZMQ_REP);
 
 	auto bindAddrBytes = QString("tcp://*:%1").arg(port).toLocal8Bit();
@@ -42,7 +48,7 @@ void DataProcesser::setup(int port)//12000
 		auto jsonDoc = QJsonDocument::fromJson(data);
 		if (jsonDoc.isNull()){
 			qWarning() << "Invalid data processing json message!";
-			continue;
+			break;//use break instead of continue 
 		}
 		auto jsonObj = jsonDoc.object();
 		//qInfo() << "data process:" << jsonObj;

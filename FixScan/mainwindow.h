@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QThread>
 #include <QPixmap>
+#include <QVector>
 #include "progressdialog.h"
 #include "subscriber.h"
 #include "dataprocesser.h"
@@ -18,6 +19,7 @@
 #include "save.h"
 #include "startscan.h"
 #include "simplify.h"
+#include "reporterror.h"
 namespace Ui {
 class MainWindow;
 }
@@ -58,7 +60,7 @@ private slots:
 	void ScanTrackLost();
 	void ScanNoMarkerDetected();
 	void ScanDist();
-	void ScanTriangleCount();
+	int ScanTriangleCount();
 	void ScanFramerate();
 	void ScanPointCount();
 	void ScanMarkerCount();
@@ -85,14 +87,15 @@ private slots:
 	void on_pushButton_ScanExitScan_clicked();
 
 	//Send a  request with a json data
-	void on_pushButton_ScanNewProject_clicked();
+	void on_pushButton_ScanNewProFilePath_clicked();
 	void on_pushButton_scanMesh_clicked();
 	void on_pushButton_scanSave_clicked();
 	void on_pushButton_scanSimplify_clicked();
 	//Send a  request with a string data
 	void on_pushButton_ScaneEnterScan_clicked();
 	void on_pushButton_ScanOpenProject_clicked();
-	void on_pushButton_ScanExportFile_clicked();
+	void on_pushButton_CancelProject_clicked();
+	//void on_pushButton_ScanExportFile_clicked();
 
     void onHeartbeat();//When the heartbeat stops,count to zero and start reporting errors
 
@@ -139,6 +142,7 @@ private:
 	save *m_save;
 	startScan *m_startScan;
 	Simplify *m_simplify;
+	ReportError *m_reportError;
 	bool m_bSimplify;
 
 public slots://Response signal to  call SDK interface  
@@ -149,10 +153,31 @@ public slots://Response signal to  call SDK interface
 	void onMesh(QByteArray);
 	void onSave(QByteArray);
 	void onSimplify(QByteArray);
+
+	void on_pushButton_Step1Next_clicked();
+	void on_pushButton_Step2Next_clicked();
+	void on_pushButton_Step2Back_clicked();
+	void on_pushButton_Step3Next_clicked();
+	void on_pushButton_Step3Back_clicked();
+	void on_pushButton_Step4Next_clicked();
+	void on_pushButton_Step4Back_clicked();
+	void on_pushButton_Step5Back_clicked();
+	void on_pushButton_NewProject_clicked();
+	void on_pushButton_OpenProOpen_clicked();
+	void on_pushButton_step5Refresh_clicked();
+
+
 protected:
 	void closeEvent(QCloseEvent *event);//When the main thread  exit,it exits the sub-thread
 
-	
+private:
+	QVector<QWidget*> widget_step;
+
+	void nextStep(int num);
+	void backStep(int num);
+
+signals:
+	void newProject(QByteArray);//The mainwindow receive this signal,the parameter is json data
 };
 
 #endif // MAINWINDOW_H
