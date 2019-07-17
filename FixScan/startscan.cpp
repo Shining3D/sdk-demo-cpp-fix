@@ -53,4 +53,18 @@ void startScan::setSubType(int index)
 	ui->comboBox_subScanType->setCurrentIndex(index-1);
 	ui->comboBox_subScanType->setEnabled(false);
 }
+void startScan::setEnable_turnableTimes(bool b)
+{
+	if (!b)
+	{
+		ui->lineEdit_turnableTimes->clear();
+		ui->label_point->hide();
+	}
+	else
+	{
+		ui->lineEdit_turnableTimes->setText("8");
+		ui->label_point->show();
+	}
+	ui->lineEdit_turnableTimes->setEnabled(b);
+}
 

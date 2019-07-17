@@ -66,6 +66,7 @@ NewProject::NewProject(QDialog *parent /*= nullptr*/):QDialog(parent)
 	this->setMinimumSize(320, 450);
 	this->setModal(false);
 	this->setWindowTitle("NewProject");
+	m_pathR->setEnabled(false);
 }
 
 NewProject::~NewProject()
@@ -101,7 +102,7 @@ void NewProject::onPushButtonClicked( )
 
 void NewProject::onPathButtonClicked()
 {
-	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("select a file"));
+	QString path = QFileDialog::getSaveFileName(this, QStringLiteral("select a file"));
 	m_pathR->setText(path);
 }
 
